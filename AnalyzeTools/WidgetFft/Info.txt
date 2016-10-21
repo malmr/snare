@@ -1,0 +1,13 @@
+===================WidgetInformationFile=========================
+====Fill out the values under "ident: values" for your Widget====
+
+ident: values
+
+ShortName: FFT
+Filename: WidgetFft
+OptParameter1: nthfft
+OptParameter1InitVal: 3
+OptParameter2: None
+OptParameter2InitVal: None
+OptParameter3: None
+OptParameter3InitVal: None

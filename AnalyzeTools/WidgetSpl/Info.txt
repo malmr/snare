@@ -1,0 +1,10 @@
+===================WidgetInformationFile=========================
+====Fill out the values under "ident: values" for your Widget====
+
+ident: values
+
+ShortName: SPL
+Filename: WidgetSpl
+OptParameter1: None
+OptParameter2: None
+OptParameter3: None

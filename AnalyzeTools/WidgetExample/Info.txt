@@ -1,0 +1,15 @@
+===================WidgetInformationFile=========================
+====Fill out the values under "ident: values" for your Widget====
+
+ident: values
+
+ShortName: Example
+Filename: WidgetExample
+OptParameter1: None
+OptParameter1InitVal: None
+OptParameter2: None
+OptParameter2InitVal: None
+OptParameter3: None
+OptParameter3InitVal: None
+ParameterFqWeightingInitVal: Z
+ParameterTimeWeightingInitVal: impulse
