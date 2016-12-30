@@ -14,13 +14,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import sys
+import os
 from PyQt5.Qt import *
 from PyQt5.QtGui import *
-
 from EditorUI.TrackAbstract import TrackAbstract
 
-class TrackButtons(TrackAbstract):
 
+class TrackButtons(TrackAbstract):
     """
     Each Track is accompanied by a selection of buttons on the left side. They are implemented in this class.
     All signals are automatically relayed to the managing backend class by the principle described in TrackAbstract.
@@ -73,7 +74,7 @@ class TrackButtons(TrackAbstract):
         self.deleteButton.setToolTip('Delete channel')
 
         self.lockButton = QToolButton(clicked=self.lock)
-        self.lockButton.setIcon(QIcon("EditorUI/Unlock.png"))
+        self.lockButton.setIcon(QIcon(self.resource_path("EditorUI/Unlock.png")))
         self.lockButton.setToolTip('Lock/Unlock selection')
         self.lockState = "Unlocked"
 
@@ -131,7 +132,8 @@ class TrackButtons(TrackAbstract):
         self.skipBackwardButton.setIcon(self.style().standardIcon(QStyle.SP_MediaSkipBackward))
         self.skipBackwardButton.setToolTip('Jump to last marker')
         self.markerButton = QPushButton(clicked=self.sig_requestMark)
-        self.markerButton.setIcon(QIcon("EditorUI/Marker.png"))
+        self.markerButton.setIcon(QIcon(self.resource_path("EditorUI/Marker.png")))
+
         self.markerButton.setStyleSheet("QToolButton {border-style: outset; border-width: 0px;}");
         self.markerButton.setToolTip('Set marker at current position')
         self.skipBackwardButton.setFixedSize(24,24)
@@ -190,15 +192,22 @@ class TrackButtons(TrackAbstract):
         A toggle switch for the lock symbol
         """
         if self.lockState == "Locked":
-            self.lockButton.setIcon(QIcon("EditorUI/Unlock.png"))
+            self.lockButton.setIcon(QIcon(self.resource_path("EditorUI/Unlock.png")))
+
             self.lockButton.update()
             self.lockState = "Unlocked"
             self.sig_editSelection.emit()
         elif self.lockState == "Unlocked":
-            self.lockButton.setIcon(QIcon("EditorUI/Lock.png"))
+            self.lockButton.setIcon(QIcon(self.resource_path("EditorUI/Lock.png")))
+
             self.lockButton.update()
             self.lockState = "Locked"
             self.sig_finishSelection.emit()
+
+    def resource_path(self, relative_path):
+        if hasattr(sys, '_MEIPASS'):
+            return os.path.join(sys._MEIPASS, relative_path)
+        return os.path.join(os.path.abspath("."), relative_path)
 
     # --- Public ---
     def slo_setSelection(self, selectionName, analysisType, selection, state):

@@ -33,7 +33,7 @@ class AnalyzeBuffer(QObject):
     selectionChanged = pyqtSignal(Channel, str, str)
     newSelection = pyqtSignal(Channel, str, str)
 
-    def __init__(self, buffer, calibrations):
+    def __init__(self, buffer, calibrations, sampleRate):
         """
         Initialise 2D dictionaries to store selections and meta information in. Also link with Buffer as data source
         and the calibration buffer.
@@ -44,10 +44,13 @@ class AnalyzeBuffer(QObject):
         super(AnalyzeBuffer, self).__init__()
         self.buffer = buffer
         self.calibrations = calibrations
+        self.sampleRate = sampleRate
 
         self.selectionExists = defaultdict(lambda: defaultdict(dict))
         self.selectionPoints = defaultdict(lambda: defaultdict(dict))
         self.selectionBuffers = defaultdict(lambda: defaultdict(dict))
+        self.offsetLength = self.sampleRate * 8
+        self.offsets = defaultdict(lambda: defaultdict(dict))
 
     def deleteChannel(self, channel):
         """
@@ -59,6 +62,7 @@ class AnalyzeBuffer(QObject):
             del self.selectionPoints[channel]
             del self.selectionExists[channel]
             del self.selectionBuffers[channel]
+            del self.offsets[channel]
         except KeyError:
             pass
 
@@ -73,6 +77,34 @@ class AnalyzeBuffer(QObject):
         """
         self.selectionPoints[channel][selNo] = points
         self.selectionBuffers[channel][selNo] = self.buffer.getSelection(channel, points)
+        selectionStart = None
+        for smp in sorted(points):
+            if points[smp] == "start":
+                selectionStart = smp
+            elif points[smp] == "end":
+                selectionEnd = smp
+                break
+        offsetdict = dict()
+
+
+        if (selectionStart - self.offsetLength) < 0:
+            # offset length exceeds file start.
+            if selectionStart < 0:
+                selectionStart = 0
+            offsetdict[0] = "start"
+            offsetdict[selectionEnd] = "end"
+            # mirroroffsetdict = dict()
+            # mirroroffsetdict[0] = "start"
+            # mirroroffsetdict[self.offsetLength - selectionStart] = "end"
+            #self.offsets[channel][selNo] = self.buffer.getSelection(channel, mirroroffsetdict)[::-1]
+            self.offsets[channel][selNo] = np.zeros(self.offsetLength - selectionStart)
+            self.offsets[channel][selNo] = np.append(self.offsets[channel][selNo], self.buffer.getSelection(channel, offsetdict))
+        else:
+            # enough offset values before selection availible.
+            offsetdict[selectionStart - self.offsetLength] = "start"
+            offsetdict[selectionEnd] = "end"
+            self.offsets[channel][selNo] = self.buffer.getSelection(channel, offsetdict)
+
         print("Added a Selection")
 
         if self.selectionExists[channel][selNo] == True:
@@ -93,3 +125,17 @@ class AnalyzeBuffer(QObject):
         buffer = buffer.astype(np.float64)
         buffer = self.calibrations.getCalibration(channel) * buffer
         return buffer
+
+    def getOffset(self, channel, selNo):
+        """
+        This is the interface for analysis widgets to access offset-data. Before handover it is converted to a float type to
+        avoid precision loss and calibrated. This is relevant to e.g. the spl-plot that needs a settling time
+
+        :param channel: The requested Channel.
+        :param selNo: Name of the selection requested.
+        :param offsetLength: Complete length of desired offset in samples.
+        """
+        buffer = np.array(self.offsets[channel][selNo])
+        buffer = buffer.astype(np.float64)
+        buffer = self.calibrations.getCalibration(channel) * buffer
+        return [buffer, self.offsetLength]

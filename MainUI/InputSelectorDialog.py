@@ -15,8 +15,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import pyaudio
-from PyQt5.QtCore import Qt
+import os
+import sys
+from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
+from PyQt5.Qt import *
 
 
 class InputSelectorDialog(QDialog):
@@ -35,6 +38,9 @@ class InputSelectorDialog(QDialog):
         :param channels: Reference to the list that will contain the results when closed.
         """
         super().__init__()
+
+        icon = QIcon(self.resource_path("icon.ico"))
+        self.setWindowIcon(icon)
 
         # Globals
         self.p = pyaudio.PyAudio()
@@ -117,3 +123,8 @@ class InputSelectorDialog(QDialog):
             # The last element is the channel
             self.channels.append(self.devices[self.dropdown.currentIndex()])
         self.done(1)
+
+    def resource_path(self, relative_path):
+        if hasattr(sys, '_MEIPASS'):
+            return os.path.join(sys._MEIPASS, relative_path)
+        return os.path.join(os.path.abspath("."), relative_path)

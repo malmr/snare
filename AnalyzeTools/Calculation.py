@@ -14,6 +14,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import sys
+import os
 import numpy as np
 from scipy import fftpack, signal
 from AnalyzeTools.NominalData import NominalData
@@ -31,7 +33,7 @@ class Calculation(QThread):
     """
     def __init__(self, snare, calib, timeWeight, fqWeight):
         # data from IEC 61672:1 2013 Norm. Band Indizes, Normfrequenzen und Gewichtung:
-        self.__nominalValues__ = NominalData()
+        self.__nominalValues__ = NominalData(self.resourcePath('AnalyzeTools/NominalData.csv'))
         self.snare = snare
         self.timeWeight = timeWeight
         self.fqWeight = fqWeight
@@ -101,8 +103,8 @@ class Calculation(QThread):
         First the needed nominal weighting coefficients a and b are imported. The filtering is implementated in lfilter
         with Direct Form II using standard difference equation.
 
-        :param values: Input values
-        :type values: array
+        :param a: Input values
+        :type a: array
         :param fqWeight: Frequency-weight A, B, C or Z
         :type fqWeight: str
         :return: Frequency-weighted values
@@ -113,12 +115,12 @@ class Calculation(QThread):
         [b, a] = self.__nominalValues__.weighting(fqWeight)
         return signal.lfilter(b, a, values)
 
-    def timeWeighting(self, values, timeWeight):
+    def timeWeighting(self, a, timeWeight):
         """Apply slow, fast or impulse time-weighting.
          Time weighting is done by integrate the sound pressure using exponential integration.
 
-        :param values: Input values
-        :type values: array
+        :param a: Input values
+        :type a: array
         :param timeWeight: Time-weight slow, fast or impulse
         :type timeWeight: str
         :return: Time-weighted values
@@ -133,9 +135,9 @@ class Calculation(QThread):
         else:
             raise BaseException(type, 'is an unknown time weighting type!')
 
-        values = self.___integrateSpl___(values, integrationTime)
-        values *= 1 / integrationTime
-        return values
+        a = self.___integrateSpl___(a, integrationTime)
+        a *= 1 / integrationTime
+        return a
 
     def indexOfNearestVal(self, a, value):
         """
@@ -145,13 +147,23 @@ class Calculation(QThread):
         :param a: Input values
         :type a: array
         :param value: Nearest value
-         :type value: int
+        :type value: int
         :return: Index of nearest value
         :rtype: int
         """
         idx = np.searchsorted(a, value, side="left")
         idx -= np.abs(value - a[idx - 1]) < np.abs(value - a[idx])
         return idx
+
+    def resourcePath(self, relativePath):
+        """
+        Returns absolute path to relative path given file as parameter.
+        :param relativePath: relative path
+        :return: absolute path
+        """
+        if hasattr(sys, '_MEIPASS'):
+            return os.path.join(sys._MEIPASS, relativePath)
+        return os.path.join(os.path.abspath("."), relativePath)
 
     def ___dbSplSquare___(self, a):
         """
@@ -181,7 +193,11 @@ class Calculation(QThread):
         :return: array in Decibel FS
         :rtype: array
         """
-        return 10.0 * np.log10(8.0 * a / ((2 ** (self.snare.sampleWidth * 8.0)) ** 2))
+        smpWidth = self.snare.sampleWidth
+        if smpWidth == 3:
+            # if 24bit, except 32bit length, because buffer extend values to 32bit.
+            smpWidth = 4
+        return 10.0 * np.log10(8.0 * a / ((2 ** (smpWidth * 8.0)) ** 2))
 
     def ___integrateSpl___(self, y, integrationTime):
         """

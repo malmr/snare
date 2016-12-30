@@ -34,6 +34,9 @@ class Menubar(QMenuBar):
     newSelection = pyqtSignal()
     changeViewTab = pyqtSignal()
     changeViewNested = pyqtSignal()
+    aboutDialog = pyqtSignal()
+    helpDialog = pyqtSignal()
+
 
     def __init__(self):
         """
@@ -59,7 +62,7 @@ class Menubar(QMenuBar):
         self.actionRecordingStop.triggered.connect(self.stopRecord)
         self.actionRecordingStop.setShortcut(self.tr("Ctrl+S"))
 
-        self.actionEditorNewSelection = QAction(self.tr(u"Add new Selections"), self)
+        self.actionEditorNewSelection = QAction(self.tr(u"Add new Selection"), self)
         self.actionEditorNewSelection.triggered.connect(self.newSelection)
 
         self.actionReportSelectAll = QAction(self.tr(u"Select all"), self)
@@ -78,9 +81,13 @@ class Menubar(QMenuBar):
         self.actionViewsNested.setShortcut(self.tr("Ctrl+N"))
         self.actionViewsNested.triggered.connect(self.changeViewNested)
 
-        self.actionHelp = QAction(self.tr(u"Help"),self)
-        self.actionHelp.setShortcut(self.tr("Ctrl+H"))
+        self.actionDocumentation = QAction(self.tr(u"QuickGuide and documentation"),self)
+        self.actionDocumentation.setShortcut(self.tr("Ctrl+H"))
+        self.actionDocumentation.triggered.connect(self.helpDialog)
+
         self.actionAbout = QAction(self.tr(u"About..."), self)
+        self.actionAbout.triggered.connect(self.aboutDialog)
+
 
         menuFile = self.addMenu(self.tr("&File"))
         menuFile.addAction(self.actionFileOpen)
@@ -106,8 +113,6 @@ class Menubar(QMenuBar):
         menuViews.addAction(self.actionViewsNested)
 
         menuHelp = self.addMenu(self.tr("&Help"))
-        menuHelp.addAction(self.actionHelp)
-        menuHelp.addSeparator()
         menuHelp.addAction(self.actionAbout)
-
-
+        menuHelp.addAction(self.actionDocumentation)
+        menuHelp.addSeparator()

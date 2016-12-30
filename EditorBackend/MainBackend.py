@@ -62,7 +62,7 @@ class MainBackend(QObject):
         self.sampleRate = sampleRate
         self.sampleWidth = sampleWidth
 
-        self.blockSize = 441000
+        self.blockSize = self.sampleRate*10
         self.waveformHeight = 100
         # Construct Backend
         self.channels = list()
@@ -70,7 +70,7 @@ class MainBackend(QObject):
         self.buffer = Buffer(self.sampleRate, self.sampleWidth, self.blockSize)
 
         self.calibrations = Calibrations()
-        self.analyzeBuffer = AnalyzeBuffer(self.buffer, self.calibrations)
+        self.analyzeBuffer = AnalyzeBuffer(self.buffer, self.calibrations, self.sampleRate)
         self.analyzeBuffer.newSelection.connect(self.newAnalysis)
         self.analyzeBuffer.selectionChanged.connect(self.updateAnalysis)
 
@@ -97,7 +97,7 @@ class MainBackend(QObject):
 
         self.reports = ReportManager(self)
 
-        self.tracks = TrackManager(self.analyses)
+        self.tracks = TrackManager(self.analyses, self.blockSize)
 
         self.tracks.addTrack.connect(self.addTrack)
         self.waveformBuffer.returnWaveform.connect(self.tracks.slo_addWaveform)
@@ -233,7 +233,7 @@ class MainBackend(QObject):
 
         :param channel: Delete data associated with this channel objects.
         :param track: Track QWidget to delete from MainWindow.
-        :type track: TrackUI
+        :type track: EditorUI.TrackUI
         """
         self.waveformBuffer.deleteChannel(channel)
         self.buffer.deleteChannel(channel)

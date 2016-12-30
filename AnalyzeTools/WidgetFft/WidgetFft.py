@@ -36,9 +36,9 @@ class WidgetFft(AnalyzeWidget):
     note::At initialisation the calculation and plotFigure methods are executed automatically.
 
     note:: The essential parts which will be automatically set to the widget (by base class):
-    self.titleLabel -- widget title
-    self.nav        -- navigation menu (dropdown selections, zoom, pan etc)
     self.figurePlot -- actual matplot figure
+    self.nav        -- navigation menu (dropdown selections, zoom, pan etc)
+    self.titleLabel -- widget title
     self.infoLabel  -- additonal widget information
     """
 

@@ -18,6 +18,11 @@ from PyQt5.QtWidgets import *
 from PyQt5.Qt import *
 import importlib
 
+from AnalyzeTools.WidgetExample.WidgetExample import WidgetExample
+from AnalyzeTools.WidgetFft.WidgetFft import WidgetFft
+from AnalyzeTools.WidgetHistogram.WidgetHistogram import WidgetHistogram
+from AnalyzeTools.WidgetSpl.WidgetSpl import WidgetSpl
+
 
 class AnalyzeWidgetSelect(QWidget):
     """

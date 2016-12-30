@@ -26,7 +26,7 @@ class StartDialog(QDialog):
     selecting an input device and channels (via InputSelectorDialog)
     """
 
-    def __init__(self, result):
+    def __init__(self, result, icon):
         """
         Maunally creates the layout, including two dropdown menus and dictionaries associating the entries of the
         dropdown menus.
@@ -37,6 +37,7 @@ class StartDialog(QDialog):
         super(StartDialog, self).__init__()
 
         self.setWindowTitle("SNARE - Configuration")
+        self.setWindowIcon(icon)
         self.setAcceptDrops(True)
         self.result = result
 

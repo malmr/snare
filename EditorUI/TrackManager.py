@@ -44,7 +44,7 @@ class TrackManager(TrackAbstract):
     getWaveform = pyqtSignal(Channel, int, int, int)
     deleteChannel = pyqtSignal(Channel, TrackUI)
 
-    def __init__(self, analyses):
+    def __init__(self, analyses, blockSize):
         """
         Defines the initial state of the editor area and reserves memory for all Track elements that will follow.
 
@@ -60,7 +60,9 @@ class TrackManager(TrackAbstract):
         self.cursorposition = 0
         self.height = 150
         self.width = 1000
-        self.smptopix = 441
+        self.blockSize = blockSize
+        self.smptopix = self.blockSize // self.width #441
+
         self.factor = 1
 
         super(TrackManager, self).__init__(self.name, self.state, self.selectionNames, self.analysisTypes, self.marks,
@@ -74,7 +76,7 @@ class TrackManager(TrackAbstract):
 
         self.overviewLoaded = False
 
-        self.overview = TrackOverview("overview", None, self.selectionNames, self.analysisTypes, self.marks, 0, self.height, self.width, self.smptopix, self.factor, self)
+        self.overview = None
 
     def slo_playpause(self):
         """
@@ -178,7 +180,7 @@ class TrackManager(TrackAbstract):
         :param QGraphicsSceneMouseEvent: Qt mouse event type containing the position on the scene, where the event was
          triggered.
         """
-        self.slo_startSelection(QGraphicsSceneMouseEvent)
+        self.sender().slo_startSelection(QGraphicsSceneMouseEvent)
 
     def slo_mouseRelease(self, QGraphicsSceneMouseEvent):
         """
@@ -189,7 +191,7 @@ class TrackManager(TrackAbstract):
         :param QGraphicsSceneMouseEvent: Qt mouse event type containing the position on the scene, where the event was
          triggered.
         """
-        self.slo_endSelection(QGraphicsSceneMouseEvent)
+        self.sender().slo_endSelection(QGraphicsSceneMouseEvent)
 
     def slo_mouseMove(self, QGraphicsSceneMouseEvent):
         """
@@ -200,7 +202,7 @@ class TrackManager(TrackAbstract):
         :param QGraphicsSceneMouseEvent: Qt mouse event type containing the position on the scene, where the event was
          triggered.
         """
-        self.slo_moveSelection(QGraphicsSceneMouseEvent)
+        self.sender().slo_moveSelection(QGraphicsSceneMouseEvent)
 
     def slo_delete(self):
         """
@@ -352,16 +354,17 @@ class TrackManager(TrackAbstract):
         """
         if not self.overviewLoaded:
             self.overviewLoaded = True
+            self.overview = TrackOverview("overview", None, self.selectionNames, self.analysisTypes, self.marks, 0, self.height, self.width, self.smptopix, self.factor, self)
             self.addTrack.emit(self.overview)
-            #self.tracks.append(self.overview)
 
         state = None
         if channel.recording:
             state = "Recording"
         else:
             state = "Playback"
-        self.overview.updateMaxLength(channel.length)
-        self.overview.updateRectangle()
+            self.overview.updateMaxLength(channel.length)
+            self.overview.updateRectangle()
+
 
         newTrack = TrackUI(channel.getName(), state, self.selectionNames, self.analysisTypes, None, 0, self.height,
                            self.width, self.smptopix, self.factor, self)

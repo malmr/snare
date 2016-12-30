@@ -312,8 +312,7 @@ class TrackAbstract(QWidget):
         Relays the signal to child-objects. The destination of this signal-path is TrackSelection, it is one of four to
         control the state machine of TrackSelection
 
-        :param QGraphicsSceneMouseEvent: A Qt-type containing at least the mouse button that was pressed and the cursor
-        position
+        :param QGraphicsSceneMouseEvent: A Qt-type containing at least the mouse button that was pressed and the cursor position
         """
         self.sig_startSelection.emit(QGraphicsSceneMouseEvent)
 
@@ -322,8 +321,7 @@ class TrackAbstract(QWidget):
         Relays the signal to child-objects. The destination of this signal-path is TrackSelection, it is one of four to
         control the state machine of TrackSelection
 
-        :param QGraphicsSceneMouseEvent: A Qt-type containing at least the mouse button that was pressed and the cursor
-        position
+        :param QGraphicsSceneMouseEvent: A Qt-type containing at least the mouse button that was pressed and the cursor position
         """
         self.sig_moveSelection.emit(QGraphicsSceneMouseEvent)
 
@@ -332,8 +330,7 @@ class TrackAbstract(QWidget):
         Relays the signal to child-objects. The destination of this signal-path is TrackSelection, it is one of four to
         control the state machine of TrackSelection
 
-        :param QGraphicsSceneMouseEvent: A Qt-type containing at least the mouse button that was pressed and the cursor
-        position
+        :param QGraphicsSceneMouseEvent: A Qt-type containing at least the mouse button that was pressed and the cursor position
         """
 
         self.sig_endSelection.emit(QGraphicsSceneMouseEvent)

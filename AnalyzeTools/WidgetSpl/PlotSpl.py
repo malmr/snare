@@ -22,7 +22,7 @@ class PlotSpl(Plot):
     """
     QWidget class which contains the SPL figure plot.
     """
-    def __init__(self, calcObj, calib):
+    def __init__(self, calcObj, calib, offset):
         """
         Initialize the parameters.
 
@@ -31,11 +31,12 @@ class PlotSpl(Plot):
         :param calib: Is None if calibration is unset or the calibration value.
         :type calib: int
         """
+        self.offset = offset
         super().__init__()
 
-        # route instance variables from calculation
-        self.values = calcObj.values    # dB Values
-        self.xAxis = calcObj.xAxis      # time Axis
+        # route instance variables from calculation and cut the offset in front
+        self.values = calcObj.values[self.offset:]    # dB Values
+        self.xAxis = calcObj.xAxis[:-self.offset]      # time Axis
         self.calib = calib
 
     def getPlot(self):

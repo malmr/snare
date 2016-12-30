@@ -15,6 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import sys
+import os
 from PyQt5.Qt import *
 
 from MainUI.StartDialog import StartDialog
@@ -35,7 +36,8 @@ class Main:
         app = QApplication(sys.argv)
 
         self.configuration = dict()
-        startDialog = StartDialog(self.configuration)
+        icon = QIcon(self.resource_path("Icon.ico"))
+        startDialog = StartDialog(self.configuration, icon)
 
         # Get information from StartDialog
         self.sampleRate = self.configuration["sampleRate"]
@@ -43,6 +45,7 @@ class Main:
 
         # Start MainUI here
         mainWindow = MainWindow()
+        mainWindow.setWindowIcon(icon)
         # Initialize backend object here
         mainBackend = MainBackend(self.sampleRate, self.sampleWidth)
         mainWindow.openWave.connect(mainBackend.openWave)
@@ -78,3 +81,8 @@ class Main:
             mainWindow.configRecordWindow()
 
         sys.exit(app.exec_())
+
+    def resource_path(self, relative_path):
+        if hasattr(sys, '_MEIPASS'):
+            return os.path.join(sys._MEIPASS, relative_path)
+        return os.path.join(os.path.abspath("."), relative_path)

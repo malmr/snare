@@ -100,7 +100,6 @@ class TrackTimeline(TrackAbstract):
             text = min + ":" + sec + "+" + str(msc) + "ms"
         return text
 
-
     def slo_update(self, pos):
         """
         The class treats the painting area as divided into blocks. From the given position the next three blocks in each
@@ -114,7 +113,7 @@ class TrackTimeline(TrackAbstract):
         backward = pos - 3 * self.width
         if backward < 0:
             backward = 0
-        widthPostScaling = self.width * self.zoom
+        widthPostScaling = self.width
         forwardBlocks = int(forward//widthPostScaling)+1
         backwardBlocks = int(backward//widthPostScaling)
 

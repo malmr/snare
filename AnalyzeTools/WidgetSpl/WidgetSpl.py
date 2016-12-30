@@ -54,7 +54,8 @@ class WidgetSpl(AnalyzeWidget):
         :param parm3: optional widget parameter (for widget NavMenu)
         """
         self.nav = NavMenuStandard()
-        self.buffer = snare.analyzeBuffer.getBuffer(channel, selNo)
+        # get selection with offset to prevent transient begin/end in the plot.
+        [self.buffer,self.offset] = snare.analyzeBuffer.getOffset(channel, selNo)
 
         super().__init__(snare, channel, selNo, timeWeight, fqWeight)
 
@@ -69,7 +70,7 @@ class WidgetSpl(AnalyzeWidget):
         Initialize the plot object, store the matplot figure and fill out the labels.
         """
         # store & plotting
-        self.plot = PlotSpl(self.calc, self.calib).getPlot()
+        self.plot = PlotSpl(self.calc, self.calib, self.offset).getPlot()
 
         # labeling
         self.titleLabel = QLabel(self.channel.getName() + ' ' + self.selNo + ' ' + ": Sound Pressure Level")

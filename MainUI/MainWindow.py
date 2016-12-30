@@ -42,8 +42,6 @@ class MainWindow(QMainWindow):
     exportReport = pyqtSignal()
     selectAllReports = pyqtSignal()
     deselectAllReports = pyqtSignal()
-    changeViewTab = pyqtSignal()
-    changeViewNested = pyqtSignal()
 
     def __init__(self):
 
@@ -53,7 +51,6 @@ class MainWindow(QMainWindow):
         super(MainWindow, self).__init__()
 
         self.menubar = Menubar()
-        self.menubar.newSelection.connect(self.newSelection)
         self.menubar.openWave.connect(self.__openWave__)
         self.menubar.configRecord.connect(self.configRecordWindow)
         self.menubar.startRecord.connect(self.startRecord)
@@ -63,10 +60,11 @@ class MainWindow(QMainWindow):
         self.menubar.exportReport.connect(self.exportReport)
         self.menubar.selectAllReports.connect(self.selectAllReports)
         self.menubar.deselectAllReports.connect(self.deselectAllReports)
-        self.menubar.changeViewTab.connect(self.changeViewTab)
         self.menubar.changeViewTab.connect(self.tabView)
-        self.menubar.changeViewNested.connect(self.changeViewTab)
         self.menubar.changeViewNested.connect(self.nestedView)
+        self.menubar.aboutDialog.connect(self.aboutDialog)
+        self.menubar.helpDialog.connect(self.helpDialog)
+
 
         self.statusbar = Statusbar()
 
@@ -182,6 +180,34 @@ class MainWindow(QMainWindow):
         self.addDockWidget(Qt.LeftDockWidgetArea, self.editorWindowDock)
         self.addDockWidget(Qt.LeftDockWidgetArea, self.analyzeWindowDock)
 
+
+    def aboutDialog(self):
+        """
+        Start the about dialog message box.
+        """
+        self.dialog = QMessageBox.about(self, 'About', 'SNARE v0.3'
+                                                       '<p style="font-weight: normal;">Copyright (C) 2016 Malte Merdes and Philipp Merz<br>'
+                                                       '<a href="https://git.io/snare">https://git.io/snare</a><br><br>'
+                                                       'Part of the bachelor\'s thesis at <a href="http://tugraz.at">Technical University of Graz</a>.<br><br>'
+                                                       'This program is free software: you can redistribute it and/or modify '
+                                                       'it under the terms of the GNU General Public License as published by '
+                                                       'the Free Software Foundation, either version 3 of the License, or '
+                                                       '(at your option) any later version.<br><br>'
+                                                       'This program is distributed in the hope that it will be useful, '
+                                                       'but WITHOUT ANY WARRANTY; without even the implied warranty of '
+                                                       'MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the '
+                                                       'GNU General Public License for more details.<br> '
+                                                       'For more information about GNU General Public License see '
+                                                       'http://www.gnu.org/licenses/.</p>')
+
+
+    def helpDialog(self):
+        """
+        Start the help dialog message box.
+        """
+        self.dialog = QMessageBox.about(self, 'Help', 'Documentation'
+                                                       '<p style="font-weight: normal;">A full SNARE documentation is provied under '
+                                                       '<a href="https://git.io/snare">https://git.io/snare</a>.')
     # Drag and Drop support
     def dragEnterEvent(self, event):
         """

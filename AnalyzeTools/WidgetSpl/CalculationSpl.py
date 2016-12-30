@@ -63,4 +63,5 @@ class CalculationSpl(Calculation):
 
         # result
         self.values = self.db(self.values, rms=False)   # convert to dB values
-        self.xAxis = np.linspace(0, sampleLen / self.snare.sampleRate, self.values.size)
+        print(self.snare.sampleRate)
+        self.xAxis = np.linspace(0, self.values.size / self.snare.sampleRate, self.values.size)

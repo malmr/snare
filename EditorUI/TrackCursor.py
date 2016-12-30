@@ -53,8 +53,7 @@ class TrackCursor(TrackAbstract):
         """
         Public. The only way to set the cursor position is from outside.
 
-        :param smp: Requested cursor position in samples. Automatic conversion from samples to the actual position in
-        pixels on screen
+        :param smp: Requested cursor position in samples. Automatic conversion from samples to the actual position in pixels on screen
         """
         self.smp = smp
         pos = smp/self.smptopix

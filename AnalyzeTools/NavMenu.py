@@ -1,3 +1,19 @@
+# This file is part of SNARE.
+# Copyright (C) 2016  Philipp Merz and Malte Merdes
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 from PyQt5.QtWidgets import *
 from PyQt5.Qt import *
 from PyQt5.QtCore import *
@@ -5,6 +21,13 @@ from PyQt5.QtCore import *
 
 
 class NavMenu(QWidget):
+
+    """
+    Nav Menu is the base class for the navigation and can be modified if not the standard
+    navigation "NavMenuStandard" with delete, timeweighting, frequency weighting, and plot
+    functions (pan, zoom, reset) isn't enoguh. This is E.g. the case for the FFT widget, 
+    which includes the nth octave dropdown.
+    """
     # general Nav signals
     # use this base class to modify your own navigation bar, that differs from the Basic Layout (WidgetNavFixed)
     pan = pyqtSignal()
@@ -85,17 +108,32 @@ class NavMenu(QWidget):
         return layout
 
     def sendReplot(self):
+        """
+        Emit replot signal.
+        """
         timeWeight = str(self.timeWeighting.currentText())
         fqWeight = str(self.fqWeighting.currentText())
         self.replot.emit(timeWeight, fqWeight)
 
     def sendReportState(self, status):
+        """
+        Emit report signal.
+        
+        :param status: bool state if report is activated
+        :type status: bool
+        """
         self.reportState.emit(status)
 
     def selectReport(self):
+        """
+    	Activate widget report checkbox.
+    	"""
         self.reportCheckbox.setCheckState(3)
 
     def deselectReport(self):
+        """
+    	Deactivate widget report checkbox.
+    	"""
         self.reportCheckbox.setChecked(False)
 
 

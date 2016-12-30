@@ -25,6 +25,13 @@ class NominalData:
     time weighting coefficients for the difference equation are stored. All nominal data are adopted after standard
     IEC 61672:1 2013: A standard for sound level meters.
     """
+    def __init__(self, csvFile):
+        """
+        Initialize parameters.
+        :param csvFile: absolute path to csv file.
+        """
+        self.csvFile = csvFile
+        print(csvFile)
 
     def weighting(self, weight):
         if weight == 'A':
@@ -85,4 +92,4 @@ class NominalData:
         A, B, C, Z weighted discrete coefficients out of a CSV file.
         Usage:  np.array(weightingData[ColName])
                 weightingData['C']"""
-        return pd.DataFrame(pd.read_csv('AnalyzeTools/NominalData.csv', sep=';', index_col=0))
+        return pd.DataFrame(pd.read_csv(self.csvFile, sep=';', index_col=0))

@@ -47,7 +47,7 @@ class AnalyzeManager(QObject):
         self.widgetsactive = 0
 
         # To change between dynamic and static import:
-        # (un-)comment this block and the block in MainBackend.
+        #(un-)comment this block and the block in MainBackend.
         #
         # <-- dynamic import
         # reading Info.txt of every AnalyzeWidgets

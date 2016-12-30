@@ -137,9 +137,9 @@ class TrackView(TrackAbstract):
 
         self.scene = TrackScene(self)
 
-        self.waveform = TrackWaveform(name, state, selections, analysisTypes, marks, cursorposition, height, width, smptopix, zoom, self, self.scene)
-
         self.timeline = TrackTimeline(name, state, selections, analysisTypes, marks, cursorposition, height, width, smptopix, zoom, self, self.scene)
+
+        self.waveform = TrackWaveform(name, state, selections, analysisTypes, marks, cursorposition, height, width, smptopix, zoom, self, self.scene)
 
         self.cursor = TrackCursor(name, state, selections, analysisTypes, marks, cursorposition, height, width, smptopix, zoom, self, self.scene)
 

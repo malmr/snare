@@ -35,7 +35,7 @@ class ReportManager(QWidget):
         super(ReportManager, self).__init__()
         self.snare = snare
         self.activatedReports = defaultdict(lambda: defaultdict(dict))
-        self.dirtmp = 'Reports/tmp/'
+        self.dirtmp = 'tmp/'
         self.allReportsActivated = False
         self.filename = None
 

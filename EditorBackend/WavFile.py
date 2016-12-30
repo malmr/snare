@@ -21,26 +21,26 @@ import time
 
 
 class WavFile(QThread):
-
     """
     This class reads standard RIFF-WAVE-files and BWF-WAVE-files. Once successfully opened, raw audio data can be
     accessed in blocked segments by providing the channel number and a sample to start from. 16bit and 24bit files
     are supported as well as audio-files with an arbitrary number of channels.
 
-     :Example:
-     file = "test.wav"
-     sampleRate = 44100
-     sampleWidth = 2
-     blockSize = 441000 # 10 seconds per block
+    :Example:
 
-     wav = WavFile(file, sampleRate, sampleWidth, blockSize)
+    file = 'test.wav'
+    sampleRate = 44100
+    sampleWidth = 2
+    blockSize = 441000 # 10 seconds per block
 
-     startSample = 30 * sampleRate # read 10 seconds starting from 0:30
-     leftChannel = 0
+    wav = WavFile(file, sampleRate, sampleWidth, blockSize)
 
-     rawData = wav.getBlock(startSample, leftChannel)
+    startSample = 30 * sampleRate # read 10 seconds starting from 0:30
+    leftChannel = 0
 
-     #rawData could now be fed to e.g. a pyaudio callback
+    rawData = wav.getBlock(startSample, leftChannel)
+    
+    #rawData could now be fed to e.g. a pyaudio callback
     """
 
     def __init__(self, fileName, sampleRate, sampleWidth, blockSize):
@@ -156,8 +156,7 @@ class WavFile(QThread):
 
         :param start: number of sample to start reading from. E.g. start = 88200 will read form 0:02s onwards.
         :param channel: 0 -> Left Channel, 1 -> Rigth Channel, n -> further channels
-        :return: Returns raw unformatted audio data as bytearray. This means that e.g. in an 24bit-file three
-                consecutive bytearray elements form one sample.
+        :return: Returns raw unformatted audio data as bytearray. This means that e.g. in an 24bit-file three consecutive bytearray elements form one sample.
         """
         pos = self.headerLength + (start * self.channels * self.sampleWidth)
 

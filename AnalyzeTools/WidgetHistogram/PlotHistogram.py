@@ -57,9 +57,9 @@ class PlotHistogram(PlotBar):
             # label is a Text instance
             label.set_color('red')
         self.axSum.set_xlim(self.xLimMin, self.xLimMax + 0.5)
-        self.ax.set_zorder(0.2)                 # increase z-order for bar plot, that pick_event is working!
-        self.ax.patch.set_visible(False)        # hide the white 'canvas' from barplot
-        self.axSum.patch.set_visible(True)      # enable canvas in the back
+        #self.ax.set_zorder(0.2)                 # increase z-order for bar plot, that pick_event is working!
+        self.ax.patch.set_visible(True)        # hide the white 'canvas' from barplot
+        self.axSum.patch.set_visible(False)      # enable canvas in the back
 
         self.fig.tight_layout()
         return self

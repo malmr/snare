@@ -29,8 +29,7 @@ class PlotFft(Plot):
 
     Additional variables:
     self.nthOctave      --  3, 6, 12, 24th Octave
-    self.xAxisComplete  --  complete frequency axis with all nominal values. Depending on nth Octave the right values
-                            are picked.
+    self.xAxisComplete  --  complete frequency axis with all nominal values. Depending on nth Octave the right values are picked.
     """
     def __init__(self, calcObj, calib):
         """

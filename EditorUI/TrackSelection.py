@@ -81,8 +81,7 @@ class TrackSelection(TrackAbstract):
         Control Slot. Triggers transition from "Idle" to "Start". Determines the selection type (Add to or subtract from
         selection) by the mouse button pressed and also send the position where the user pressed.
 
-        :param QGraphicsSceneMouseEvent: Qt-type from which to get the pressed mouse button and mouse position on the
-        scene.
+        :param QGraphicsSceneMouseEvent: Qt-type from which to get the pressed mouse button and mouse position on the scene.
         """
         type = None
         button = QGraphicsSceneMouseEvent.button()
